@@ -25,6 +25,34 @@ module Dragonfly
         ::Cloudinary::Utils.cloudinary_url(public_id(uid), options)
       end
 
+
+      ###########################################################
+
+      # Store the data AND meta, and return a unique string uid
+      def write(content, opts={})
+        #some_unique_uid = ::Cloudinary::Uploader.upload(content.data, meta: content.meta)
+        ::Cloudinary::Uploader.upload(content.data, content.meta)
+      end
+
+      # Retrieve the data and meta as a 2-item array
+      def read(uid)
+        #url = ::Cloudinary::Utils.cloudinary_url public_id(uid), format: ext(uid) || 'jpg'
+        #::Cloudinary::Downloader.download(url)
+
+        data = ::Cloudinary::Utils.cloudinary_url public_id(uid), format: ext(uid) || 'jpg'
+        #meta = ::Cloudinary::Downloader.
+        if data
+          [
+              data,     # can be a String, File, Pathname, Tempfile
+              meta      # the same meta Hash that was stored with write
+          ]
+        else
+          nil         # return nil if not found
+        end
+      end
+
+      ###########################################################
+
       private
 
       def public_id(uid)
